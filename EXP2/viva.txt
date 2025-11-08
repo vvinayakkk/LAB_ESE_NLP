@@ -1,0 +1,315 @@
+## 2. TEXT CLASSIFICATION — BAG OF WORDS MODEL USING TOKENIZE AND VECTORIZE
+
+### Objective
+Provide a comprehensive theoretical background, definitions of relevant terminologies, and an extensive set of viva questions covering the Bag-of-Words (BoW) approach to text classification (tokenization and vectorization).
+
+---
+
+## Viva Questions — Answers (concise)
+
+Basic / Definitions
+1. Answer: Assigning labels to text documents (e.g., spam/ham, topic tags).
+2. Answer: Vector representation of documents using token counts or weights; ignores order.
+3. Answer: Tokenization splits text into tokens: whitespace, regex, language-aware tokenizers, subword (BPE).
+4. Answer: The set of unique tokens used as features when vectorizing text.
+5. Answer: TF = term frequency in a document; IDF = inverse document frequency across corpus.
+6. Answer: TF-IDF multiplies TF and IDF to emphasize informative terms.
+7. Answer: Stopwords are common low-content words ("the", "is"); often removed to reduce noise.
+8. Answer: Stemming is heuristic truncation; lemmatization maps to dictionary base forms using morphology/POS.
+9. Answer: n-grams are token sequences of length n (unigram/bigram); capture short-range order.
+10. Answer: A matrix (documents × terms) containing counts or weights for each term in each document.
+
+Conceptual / Explanatory
+11. Answer: BoW ignores order for simplicity and robustness but loses syntax/negation/phrase info.
+12. Answer: CountVectorizer returns raw counts; TfidfVectorizer scales counts by IDF to reduce common-term impact.
+13. Answer: Use HashingVectorizer for streaming/large-scale tasks where a fixed memory footprint is needed.
+14. Answer: As features grow, data sparsity increases and models need more data/regularization to generalize.
+15. Answer: Sparse matrices store only non-zeros, saving memory and computation for sparse BoW vectors.
+16. Answer: Laplace smoothing adds a small constant to counts to avoid zero probabilities for unseen tokens.
+17. Answer: Multinomial models counts; Bernoulli models binary presence/absence—choice depends on feature type.
+18. Answer: Imbalance skews accuracy; favor precision/recall, F1, or class-weighted metrics and stratified sampling.
+19. Answer: IDF gives low weight to terms appearing in many documents (e.g., "the"), so TF-IDF downweights them.
+20. Answer: Use embeddings when semantics, polysemy, or context are important and you have enough resources.
+
+Mathematical / Derivation
+21. Answer: Log-likelihood: log P(c) + Σ_t x_t log P(t|c) (use logs to sum instead of multiply).
+22. Answer: Compute TF per doc, DF per term, IDF = log((N+1)/(df+1))+1, then TF×IDF for each term/doc.
+23. Answer: Products of many probabilities underflow; logs convert products to sums and preserve precision.
+24. Answer: Add-1 smoothing: P(t|c) = (count_t,c + 1)/(total_terms_c + V) avoids zeros.
+25. Answer: Raw counts reflect frequency; normalized TF controls for document length differences.
+
+Implementation / Practical
+26. Answer: Use regex for URLs/emails, emoji-aware tokenizers, or replace special tokens with placeholders.
+27. Answer: Pipeline: TfidfVectorizer() → LogisticRegression(); use scikit-learn Pipeline and GridSearchCV.
+28. Answer: Persist with joblib/pickle (save both vectorizer and model) and load in inference environment.
+29. Answer: Removing stopwords reduces noise and dimensionality but may remove task-relevant words.
+30. Answer: Try unigram→bigram→trigram in CV; compare validation metrics and complexity trade-offs.
+
+Model Selection and Evaluation
+31. Answer: Use grid/random search with CV for hyperparameters (ngram range, C, regularization, α).
+32. Answer: Stratified k-fold keeps class proportions in folds to give reliable estimates with imbalanced data.
+33. Answer: Precision-recall is better for imbalanced problems where positive class interest is higher.
+34. Answer: Micro F1 aggregates per-sample, macro averages per-class equally, weighted accounts for support.
+35. Answer: Inspect confusion matrix, high-weight features, and misclassified examples to find error patterns.
+
+Advanced / Comparative
+36. Answer: Generative (NB) models joint P(x,c); discriminative (LR/SVM) model P(c|x) directly—discriminative often yields better boundaries, NB is simpler and fast.
+37. Answer: L1 encourages sparse weights (feature selection); L2 shrinks weights, reducing variance.
+38. Answer: Chi-square measures term-class dependency; mutual information measures information gain — used to rank/select features.
+39. Answer: Use SelectKBest, LSA (SVD) or random projection; dense transforms may be needed after selection.
+40. Answer: Embeddings capture semantic similarity and context; BoW captures only token counts and frequency.
+
+Debugging and Edge Cases
+41. Answer: Likely overfitting, data leakage, or mismatch between train/test distributions.
+42. Answer: Zero-variance words carry no discriminative power and can be removed.
+43. Answer: OOV tokens are ignored or mapped to an "UNK" token; ensure vectorizer vocab covers expected terms or use hashing.
+44. Answer: Strong prior class imbalance or poor features can make NB default to majority class; check priors and smoothing.
+45. Answer: Reduce vocab via min_df/max_df, feature selection, use hashing, or increase sparsity-friendly storage.
+
+Coding/Hands-on Questions
+46. Answer: Iterate documents, split tokens, add to dictionary with counts; sort/filter by frequency for vocabulary.
+47. Answer: Compute DF, IDF, TF for each doc, then TF×IDF; normalize rows as needed.
+48. Answer: Add α to counts and compute probabilities as (count+α)/(total+αV) in NB pseudocode.
+49. Answer: Run CV experiments comparing unigram vs unigram+bigram features and compare validation metrics.
+50. Answer: HashingVectorizer(n_features) maps tokens via hash to indices; pros: memory/fixed size; cons: collisions, no inverse mapping.
+
+Design / Dataset Questions
+51. Answer: Use a fixed random seed and stratified split for train/validation/test; document the split proportions.
+52. Answer: Record source, date, collection method, label schema, split IDs, class distribution, preprocessing steps.
+53. Answer: If model capacity is saturated, get more labeled data; if data is limited but informative, engineer features.
+54. Answer: Use weak supervision, data augmentation, crowdsourcing, or active learning to collect labels cheaply.
+55. Answer: Detect noisy labels via disagreement, model confidence, and manual review; consider relabeling or robust loss.
+
+Oral follow-ups / Thought questions
+56. Answer: Stopwords might have contextual value for the task; removing them can remove signals that help classification.
+57. Answer: Use higher-order n-grams, phrase features, or syntactic features to capture subtle differences.
+58. Answer: BoW can't capture negation well; include negation-aware tokens (e.g., "not_good"), bigrams, or dependency features.
+59. Answer: Use linear models with interpretable weights, list top positive/negative features per class, and produce explanations.
+60. Answer: Consider bias from training data, privacy of text data, potential harm from misclassification, and fairness across groups.
+
+Extra Challenge / Research-style
+61. Answer: Concatenate BoW sparse features with dense pre-trained embedding averages or use both in a stacked model.
+62. Answer: Control dataset size, preprocessing, hyperparameters, random seed; measure accuracy, F1, compute time, and resource usage.
+63. Answer: Build per-language vocabularies or multilingual tokenization and use language ID or shared subword vocabularies.
+64. Answer: Subword tokenizers break rare words into pieces allowing shared representations, reducing OOV issues compared to BoW.
+65. Answer: Use domain adaptation: fine-tune on small in-domain data, reweight samples, or use feature augmentation to reduce distribution gap.
+
+---
+
+End of Viva Answers.
+
+## Theory (comprehensive)
+
+1. Overview of Text Classification
+- Definition: Text classification is the task of assigning predefined categories to natural language documents. It can be binary (spam/ham), multi-class (topic labeling), or multilabel (multiple topics per document).
+- Pipeline: data collection → preprocessing → feature extraction (vectorization) → model training → evaluation → deployment.
+
+2. Bag-of-Words (BoW) Model
+- Concept: Represent each document as a fixed-length vector that counts (or otherwise aggregates) occurrences of tokens (words, n-grams) from a vocabulary. Order and grammar are ignored.
+- Representation: If vocabulary size = V, each document is a V-dimensional vector; typical entries: raw term frequency (TF), binary presence/absence, normalized TF, or TF-IDF values.
+
+3. Tokenization
+- Purpose: Break raw text into units (tokens) — typically words, but can be subwords, characters, or n-grams.
+- Methods: whitespace splitting, rule-based (punctuation handling), regex, language-aware tokenizers (e.g., for Chinese), subword tokenizers (BPE/WordPiece).
+- Issues: punctuation, contractions, hyphenation, clitics, emojis, special characters, multilingual text.
+
+4. Preprocessing (text normalization)
+- Lowercasing, removing punctuation, normalizing unicode, removing or expanding contractions.
+- Stopword removal: removes high-frequency low-content words (e.g., "the", "is"). Use carefully — can hurt some tasks.
+- Stemming: crude morphological normalization (e.g., Porter stemmer) that truncates words to stems; fast but can be aggressive.
+- Lemmatization: linguistically informed normalization to base dictionary forms (lemmas); requires POS tagging or dictionaries.
+- Handling numbers, dates, URLs, special tokens (email, mentions), padding/truncation for fixed-length processing.
+
+5. N-grams
+- Definition: contiguous sequences of n tokens. Unigrams (n=1), bigrams (n=2), trigrams (n=3), etc.
+- Trade-offs: higher n captures local order and phrases but increases vocabulary size and sparsity.
+
+6. Feature weighting
+- Term Frequency (TF): raw counts or normalized counts (e.g., TF / document length).
+- Document Frequency (DF): number of documents containing the term — used for feature selection and IDF.
+- Inverse Document Frequency (IDF): idf(t) = log(N / (1 + df(t))) or log(1 + N/df(t)). Scales down weights for common terms.
+- TF-IDF: tf(t,d) * idf(t) — balances term importance in that document vs across corpus.
+
+7. Vectorization techniques
+- CountVectorizer: raw counts into a sparse matrix (documents × vocabulary).
+- TF-IDF Vectorizer: applies TF-IDF weighting.
+- HashingVectorizer: hashing trick to map tokens to fixed-size vector without storing vocabulary — memory efficient, collisions possible.
+
+8. Sparsity and dimensionality
+- BoW vectors are high-dimensional and sparse. Use sparse storage (CSR/CSC matrices) and sparse-aware algorithms.
+- Dimensionality reduction: feature selection (chi-square, mutual information), singular value decomposition (LSA), PCA (rarely used directly on sparse), random projection.
+
+9. Models commonly used with BoW
+- Naive Bayes (Multinomial, Bernoulli): probabilistic models well-suited for count data; fast and robust for text.
+- Logistic Regression: discriminative linear model; often with L1 or L2 regularization.
+- Support Vector Machines (SVM): linear SVMs perform well in high-dimensional sparse spaces.
+- Decision Trees / Random Forests: less common for raw BoW because of high dimension; used after dimensionality reduction or feature engineering.
+- Neural Networks: simple feed-forward nets on BoW, or prefer embeddings + deep architectures for richer representations.
+
+10. Naive Bayes formula (Multinomial)
+- For class c and document d represented as counts x_t for terms t, the class posterior (with Laplace smoothing) is:
+	P(c|d) ∝ P(c) * Π_t P(t|c)^{x_t}
+	where P(t|c) = (count(t in docs of class c) + α) / (total terms in class c + αV).
+
+11. Regularization and overfitting
+- In high-dimensional spaces, linear models can overfit; regularization (L1 → sparsity, L2 → weights shrinkage) controls complexity.
+
+12. Evaluation metrics
+- Accuracy, Precision, Recall, F1-score (micro/macro/weighted), Confusion matrix, ROC curve and AUC (mainly for binary). For imbalanced classes, prefer precision/recall and F1 or class-weighted metrics.
+
+13. Cross-validation and model selection
+- k-fold CV, stratified k-fold for class imbalance, nested CV for hyperparameter optimization.
+
+14. Class imbalance handling
+- Resampling (oversampling minority, undersampling majority), class-weighted loss, threshold tuning, evaluation metrics that reflect imbalance.
+
+15. Error analysis and confusions
+- Inspect misclassified examples, confusion pairs, feature importance (coefficients in linear models), and dataset labeling issues.
+
+16. Computational complexity and scaling
+- Building vocabulary: O(N_docs × avg_doc_length).
+- Vectorizing: sparse operations; memory dominated by number of non-zero entries.
+- Hashing trick reduces memory but introduces collisions.
+
+17. Alternatives to BoW
+- Word embeddings (word2vec, GloVe), contextual embeddings (BERT). They capture semantics and word order (to some extent). BoW is simpler and often strong baseline.
+
+18. Practical tips
+- Use pipelines (scikit-learn) to chain preprocessing, vectorization, and model training reproducibly.
+- Persist vectorizer (vocabulary) with the model for inference.
+- Monitor distribution shift between training and production text (different vocabulary, style).
+
+---
+
+## Mathematical & Implementation Details
+
+- Vocabulary V, document d represented as vector x ∈ R^{|V|}.
+- Raw term-frequency vector: x_t = count(t in d).
+- Normalized TF: x_t = count(t in d) / ∑_u count(u in d).
+- IDF: idf_t = log((N + 1) / (df_t + 1)) + 1 (smooth variant).
+- TF-IDF weight: w_{t,d} = tf_{t,d} × idf_t.
+
+Optimization & numerics:
+- Use log probabilities in Naive Bayes to avoid underflow: log P(c|d) ∝ log P(c) + ∑_t x_t log P(t|c).
+- For sparse multiplication, use specialized libraries (scipy.sparse).
+
+---
+
+## Terminologies (definitions)
+
+- Token: smallest unit produced by tokenization (word, subword, char).
+- Vocabulary: set of unique tokens used to vectorize documents.
+- Document-Term Matrix (DTM): matrix with shape (N_documents × V) containing counts or weighted values.
+- Corpus: collection of documents.
+- Stopwords: common words with little semantic content.
+- Stemming: heuristic reduction of words to stems.
+- Lemmatization: dictionary/POS-based normalization to root words.
+- n-gram: sequence of n tokens.
+- TF: term frequency — how often a term appears in a document.
+- IDF: inverse document frequency — how unique a term is across documents.
+- TF-IDF: product of TF and IDF; term importance measure.
+- Hashing trick: map features to indices using a hash function, fixed-size vector.
+- Sparse matrix: a storage format that stores only non-zero entries to save memory.
+- Laplace smoothing (add-α): prevents zero probabilities in probabilistic models.
+- Multinomial Naive Bayes: NB variant modeling counts per class.
+- Bernoulli Naive Bayes: NB variant modeling binary presence/absence.
+- Precision: TP / (TP + FP).
+- Recall (Sensitivity): TP / (TP + FN).
+- F1-score: harmonic mean of precision and recall: 2 * (P*R)/(P+R).
+- Confusion matrix: table of predicted vs true labels.
+
+---
+
+## Viva Questions (extensive)
+
+Note: Questions are grouped and ordered roughly from basic to advanced. Use them for oral exams, practice, and revision.
+
+### Basic / Definitions
+1. What is text classification?
+2. What is the Bag-of-Words model?
+3. Define tokenization. Give examples of tokenization methods.
+4. What is a vocabulary in text processing?
+5. Explain term frequency (TF) and inverse document frequency (IDF).
+6. What is TF-IDF? Why is it useful?
+7. What are stopwords? Give examples.
+8. What is stemming vs lemmatization?
+9. What are n-grams? How do they help?
+10. What does a Document-Term Matrix represent?
+
+### Conceptual / Explanatory
+11. Why do we ignore word order in BoW? What are the consequences?
+12. Compare CountVectorizer and TF-IDF vectorizer.
+13. When would you use HashingVectorizer?
+14. Explain the curse of dimensionality in the context of BoW.
+15. Why are sparse matrices important for text data?
+16. Explain Laplace smoothing in Naive Bayes; why is it needed?
+17. Compare Multinomial NB and Bernoulli NB.
+18. How does class imbalance affect evaluation metrics? Which metric would you choose for imbalanced data?
+19. How does TF-IDF downweight common words? Provide an example.
+20. When is it better to use embeddings rather than BoW?
+
+### Mathematical / Derivation
+21. Derive the log-likelihood for Multinomial Naive Bayes.
+22. Show how TF-IDF is computed for a small corpus example (work through the numbers).
+23. Explain why using log probabilities avoids underflow.
+24. Derive how Laplace (add-1) smoothing changes P(t|c) in Multinomial NB.
+25. Explain the difference between raw counts and normalized TF. When is normalization necessary?
+
+### Implementation / Practical
+26. How would you tokenize text containing URLs, emails, and emoticons?
+27. Show a scikit-learn pipeline that tokenizes, vectorizes (TF-IDF), and trains a logistic regression classifier.
+28. How do you persist a trained vectorizer and model for later inference?
+29. What are the pros and cons of removing stopwords before training?
+30. How would you choose n for n-grams? What tests would you run experimentally?
+
+### Model Selection and Evaluation
+31. How do you perform hyperparameter tuning for a BoW-based classifier?
+32. Explain stratified k-fold cross-validation and why it's used.
+33. What is precision-recall curve and when is it more informative than ROC?
+34. Define micro vs macro vs weighted F1. When to use each?
+35. How do you perform error analysis for misclassifications?
+
+### Advanced / Comparative
+36. Compare generative (Naive Bayes) vs discriminative (Logistic Regression, SVM) models for text.
+37. How does regularization affect logistic regression weights in high dimensions?
+38. Explain feature selection techniques for text (chi-square, mutual information). How are they computed?
+39. Discuss dimensionality reduction approaches appropriate for BoW data.
+40. How do word embeddings handle semantics compared to BoW? Give examples.
+
+### Debugging and Edge Cases
+41. If your model has high training accuracy but poor test accuracy, what could be wrong?
+42. If certain words have zero variance across the corpus, how would they affect your classifier?
+43. How to handle out-of-vocabulary (OOV) words at inference time when using CountVectorizer?
+44. What causes Naive Bayes to predict the majority class for most inputs?
+45. If your TF-IDF matrix is extremely large, what are practical ways to reduce memory usage?
+
+### Coding/Hands-on Questions
+46. Write code to build a vocabulary from a list of documents (pseudocode acceptable).
+47. How to compute TF-IDF from raw counts without using libraries? Outline algorithmic steps.
+48. Implement Laplace smoothing in a simple NB classifier (pseudocode).
+49. How would you measure whether bigrams improve performance over unigrams?
+50. Demonstrate how to use sklearn.feature_extraction.text.HashingVectorizer and explain the trade-offs.
+
+### Design / Dataset Questions
+51. How do you split a dataset for training/validation/testing for reproducible experiments?
+52. What metadata about the dataset would you record for a reproducible text-classification experiment?
+53. When would you choose to sample more data vs engineering more features?
+54. How to collect additional labeled data cheaply for improving classifier performance?
+55. How to detect and handle label noise in the dataset?
+
+### Oral follow-ups / Thought questions
+56. Suppose you remove stopwords and performance drops — why might this happen?
+57. If two classes share most vocabulary but differ in subtle phrase usage, how can you adapt features to capture that?
+58. Can BoW capture negation? If not, how could you extend it to do so?
+59. How would you build an explainable text classifier using BoW?
+60. Discuss ethical considerations for deploying text classifiers (bias, fairness, privacy).
+
+### Extra Challenge / Research-style
+61. Explain how you might combine BoW features with pre-trained embeddings in a hybrid model.
+62. Propose an experiment to compare BoW-based SVM and BERT-based fine-tuning on a small dataset — what variables would you control?
+63. How to adapt BoW for multilingual corpora?
+64. Discuss the influence of subword tokenization on rare-word handling compared to BoW.
+65. Explain domain adaptation strategies when training data distribution differs from production.
+
+---
+
