@@ -1,3 +1,29 @@
+## Theory and Concepts
+
+1. What is an HMM?
+- A Hidden Markov Model (HMM) models sequences where hidden states (tags) emit observable tokens (words).
+- Use-case: sequence labeling tasks like NER or POS tagging.
+
+2. Core components (simple)
+- Start probabilities π: P(tag at position 0).
+- Transition matrix A: P(tag_t | tag_{t-1}).
+- Emission matrix B: P(word | tag).
+
+3. States vs Observations
+- States = discrete labels (e.g., PER, LOC, ORG, O).
+- Observations = tokens in the sentence (preferably normalized, e.g., lowercase).
+
+4. Viterbi (high level)
+- Dynamic programming that finds the most likely state sequence.
+- Maintain dp[t][s] = best log-prob for state s at time t and back[t][s] = best previous state.
+- Steps: initialize → recurse (max over previous states) → terminate → backtrack.
+
+5. Evaluation & limitations (brief)
+- Viterbi gives the best path, not marginal probabilities. For token marginals use forward-backward.
+- HMM is first-order Markov; it ignores long-range dependencies and rich features. Consider CRF or neural models for better performance.
+
+---
+
 # Viva Questions - HMM & Viterbi Decoding
 
 ### 1. What is the objective of your experiment?
