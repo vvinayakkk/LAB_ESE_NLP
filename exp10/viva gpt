@@ -1,0 +1,209 @@
+Below is a clean, ready-to-submit **viva.md** file for your RAG viva.
+It contains **questions + concise but high-scoring answers**, structured like an oral-exam sheet.
+
+You can **copy–paste directly** into a `viva.md` file.
+
+---
+
+# **RAG Viva – Viva.md**
+
+## **1. What is Retrieval-Augmented Generation (RAG)?**
+
+Retrieval-Augmented Generation is an AI technique where a Large Language Model (LLM) retrieves relevant information from an external knowledge source (documents, PDFs, databases, websites) and then generates an answer grounded in that retrieved information.
+It improves **accuracy**, **reduces hallucination**, and allows **domain-specific knowledge** without retraining the model.
+
+---
+
+## **2. Why do we need RAG instead of directly using an LLM?**
+
+* LLMs have limited training cut-off dates.
+* They can hallucinate when asked for domain-specific facts.
+* RAG allows the model to reference **your own data** (PDFs, reports, manuals).
+* It keeps answers **accurate, updated, and traceable** without re-training.
+
+---
+
+## **3. What are the main components of a RAG system?**
+
+1. **Document Loader** – loads PDFs, docs, text, webpages.
+2. **Chunking** – splits long documents into smaller segments.
+3. **Embedding Model** – converts chunks into numerical vectors.
+4. **Vector Store / Index** – stores embeddings (FAISS, Chroma, Pinecone).
+5. **Retriever** – finds top-k chunks relevant to the query.
+6. **Generator (LLM)** – uses retrieved chunks to form the final answer.
+7. **Provenance / Citation** – cites which documents the answer is based on.
+
+---
+
+## **4. What is a vector embedding?**
+
+A vector embedding is a numerical representation of text (a list of floating-point numbers) that captures the **semantic meaning** of that text.
+Similar texts have embeddings that are close to each other in vector space.
+
+---
+
+## **5. Why do we chunk documents?**
+
+* LLMs cannot embed very large texts at once.
+* Chunking ensures **better semantic search**, **finer retrieval**, and **lower memory usage**.
+* It avoids retrieval of irrelevant large sections and improves precision.
+
+---
+
+## **6. What is a vector database?**
+
+A vector database stores embeddings and supports **similarity search** (e.g., cosine similarity, L2 distance).
+Examples: **FAISS**, **Chroma**, **Milvus**, **Pinecone**, **Weaviate**.
+
+---
+
+## **7. Explain the RAG pipeline step by step.**
+
+1. Load PDFs / documents.
+2. Clean & chunk the text.
+3. Convert chunks to embeddings using an embedding model.
+4. Store all embeddings in a vector index.
+5. When the user asks a question, embed the user query.
+6. Retrieve top-k similar chunks from the index.
+7. Provide those chunks to the LLM.
+8. LLM generates an answer grounded in the retrieved content.
+9. Return answer + citation to original documents.
+
+---
+
+## **8. What are the advantages of RAG?**
+
+* Reduces hallucinations
+* Uses your latest data
+* No need to retrain LLM
+* Works with large PDFs and structured/unstructured data
+* Highly scalable and dynamic
+
+---
+
+## **9. What are the limitations of RAG?**
+
+* Retrieval quality heavily depends on chunking strategy.
+* If embeddings are bad, retrieval is bad → answer becomes incorrect.
+* Requires vector DB and preprocessing pipeline.
+* Cannot reason beyond retrieved content.
+
+---
+
+## **10. What chunking strategies are used in RAG?**
+
+* **Fixed-size chunking** (e.g., 300–500 tokens)
+* **Sentence-based chunking**
+* **Paragraph-based chunking**
+* **Recursive splitting** (LangChain style)
+* Overlapping chunks (to maintain context continuity)
+
+---
+
+## **11. What is Top-K retrieval?**
+
+Top-K retrieval means selecting the **K most similar** document chunks to the user’s query based on vector similarity.
+Choosing K balances between **accuracy** and **performance**.
+
+---
+
+## **12. What embedding models can be used in RAG?**
+
+* **Google Gemini Embedding models**
+* **OpenAI text-embedding-3-large / small**
+* **SentenceTransformers** (MiniLM, mpnet, etc.)
+* **Cohere embeddings**
+
+---
+
+## **13. What LLMs can be used for generation in RAG?**
+
+* Gemini (Gemini Flash / Pro)
+* GPT-4 / GPT-4o / GPT-4o-mini
+* Llama 3
+* Mixtral
+* Claude 3
+
+---
+
+## **14. What is grounding in RAG?**
+
+Grounding means the generated answer is supported by the retrieved content, not by hallucinated reasoning.
+It ensures **factual correctness** and **citation reliability**.
+
+---
+
+## **15. How do you evaluate the performance of a RAG system?**
+
+* **Retrieval Accuracy** (Recall@K)
+* **Answer Accuracy / Factuality**
+* **Response Time**
+* **Hallucination Rate**
+* **User Satisfaction**
+
+---
+
+## **16. What improvements can be applied to RAG systems?**
+
+* Better chunking (recursive, semantic)
+* Hybrid search (vector + keyword)
+* Reranking models
+* Document summarization
+* Prompt engineering for grounding
+* Using metadata filters
+
+---
+
+## **17. What is Agentic RAG?**
+
+Agentic RAG adds **tool usage**, **planning**, and **multi-step reasoning** on top of basic RAG.
+The LLM:
+
+* Retrieves data,
+* Plans steps,
+* Uses tools (calculator, search, APIs),
+* Produces more reliable multi-step answers.
+
+---
+
+## **18. Where is RAG used in real-world applications?**
+
+* Chatbots over company policies
+* PDF Q&A for research papers
+* Customer support
+* Legal/medical document assistants
+* Personalized search engines
+* LMS / knowledge base automation
+* Enterprise document intelligence
+
+---
+
+## **19. Difference between Fine-Tuning and RAG?**
+
+| RAG                     | Fine-Tuning                   |
+| ----------------------- | ----------------------------- |
+| No model changes        | Model is retrained            |
+| Uses external data      | Data baked into the weights   |
+| Fast + cheap            | Slower + expensive            |
+| Flexible                | Not flexible                  |
+| Great for factual tasks | Great for pattern/style tasks |
+
+---
+
+## **20. Why is RAG preferred for enterprise use cases?**
+
+* Secure: data stays local
+* Customizable to any documents
+* Cost-efficient
+* No need to train new models
+* Easy to update (just add new PDFs)
+
+---
+
+If you want, I can also create:
+✅ A **one-page RAG summary sheet**,
+✅ **Presentation slides**,
+✅ **RAG architecture diagram**,
+✅ Or a **Gemini+RAG viva code appendix**.
+
+Just tell me!
